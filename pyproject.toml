@@ -1,0 +1,46 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bd-freecad-library"
+version = "0.0.1"
+description = "build123d parametric standards and curated designs derived from the FreeCAD Parts Library"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Paul Fremantle" },
+]
+keywords = ["build123d", "cad", "freecad", "parametric", "iso", "din"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "build123d",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-xdist",
+]
+
+[project.urls]
+Homepage = "https://github.com/pzfreo/bd-freecad-library"
+Repository = "https://github.com/pzfreo/bd-freecad-library"
+Issues = "https://github.com/pzfreo/bd-freecad-library/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bd_freecad_library"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-n auto"

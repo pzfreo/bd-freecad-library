@@ -1,0 +1,19 @@
+bd-freecad-library
+==================
+
+This project contains parametric build123d Python implementations of parts
+that are described in the FreeCAD Parts Library:
+
+    https://github.com/FreeCAD/FreeCAD-library
+    License: LGPL-2.1-or-later
+
+The dimensional data tables in this project (in DIMENSIONS.md files under
+docs/standards/...) are drawn from international standards (ISO / DIN /
+ANSI / EN), with the FreeCAD Parts Library as the cross-reference source
+for variant geometry.
+
+The Python implementations themselves are independent rewrites, not
+verbatim translations. They are licensed under MIT (see LICENSE).
+
+When using this library, attribute the FreeCAD Parts Library if your
+distribution includes any dimension tables that originate from there.
