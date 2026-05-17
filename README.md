@@ -10,13 +10,14 @@ that work into a reusable Python package.
 
 ## Status: v0.0 — bootstrap
 
-Currently scaffolded with ISO 7093 (plain washers, large series) as
-the first family. Validation harness in place; ISO 4762 (socket head
-cap screws) is the planned second family once a `fcstd2b123d`
-translator gap is closed (see issues).
+Currently scaffolded with **EN 10058 hot-rolled flat steel bars** as
+the first family — a true category 2a candidate (structural steel
+profiles, which `bd_warehouse` doesn't cover today).
 
-See `CONTRIBUTING.md` for the five-step process used to add each
-family.
+Validation harness in place. See `CONTRIBUTING.md` for the five-step
+process used to add each family, including the **step 0 bd_warehouse
+gate** — anything bd_warehouse already covers is explicitly out of
+scope.
 
 ## What's in here
 
@@ -34,11 +35,11 @@ pip install bd-freecad-library
 ## Example
 
 ```python
-from bd_freecad_library.standards.iso7093 import iso7093_plain_washer
+from bd_freecad_library.standards.en_10058 import en_10058_flat_bar
 
-# An M5 plain washer (large series)
-washer = iso7093_plain_washer(thread="M5")
-print(washer.volume)
+# A 60 × 4 × 100 mm hot-rolled flat steel bar
+bar = en_10058_flat_bar(width=60, thickness=4, length=100)
+print(bar.volume)  # 24000.0
 ```
 
 ## Validation
