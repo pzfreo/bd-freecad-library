@@ -1,18 +1,76 @@
 # Contributing — adding a part family
 
-This library follows a repeatable five-step process for each new
-standardised parts family or curated design. The workflow is designed
-so every family ends up with the same shape: a parametric function (or
-class), a regression manifest pinned to FreeCAD source fixtures, and a
-per-module README.
+Since #8 this library is **manifest-driven**: each standards module is
+**generated** from a YAML manifest by ``fcstd2b123d.family_extract``.
+The generated ``.py`` files are committed so library consumers don't
+need ``fcstd2b123d`` at install time, but the source of truth is the
+manifest.
 
-> **Note on the workflow's lifespan**: this 5-step hand-written process
-> is the **v0.x bootstrap**. The steady-state architecture is in
-> [`fcstd2b123d/docs/design/family-extraction.md`](https://github.com/pzfreo/fcd2b123d/blob/main/docs/design/family-extraction.md)
-> — manifests, not hand-written Python, and class-based output
-> generated deterministically by the translator. Once Phase 4 of that
-> design lands, this CONTRIBUTING doc gets a substantial rewrite. The
-> bd_warehouse pre-check (Step 0 below) remains regardless.
+## Workflow for adding a new family
+
+### Step 0 — CHECK bd_warehouse first (required gate)
+
+Same gate as before — see the table further down. Anything bd_warehouse
+already covers is out of scope.
+
+### Step 1 — Author the YAML manifest
+
+Create ``families/<family>.yaml`` following the schema in
+[`fcstd2b123d/docs/design/family-extraction.md`](https://github.com/pzfreo/fcd2b123d/blob/main/docs/design/family-extraction.md).
+Required fields: ``family``, ``class_name``, ``standard.ref``,
+``fixture_glob``, ``parameters``. The canonical example is
+``families/en_10058.yaml``.
+
+### Step 2 — Regenerate the module
+
+```bash
+export FCSTD2B123D_REPO=$(realpath ../fcd2b123d)
+export FCSTD2B123D_FREECAD_PYTHON=$FCSTD2B123D_REPO/.conda/envs/freecad/bin/python
+export FCSTD2B123D_FREECAD_PYTHONPATH=$FCSTD2B123D_REPO/.conda/envs/freecad/lib
+./tools/regenerate.sh families/<family>.yaml
+```
+
+This produces ``src/bd_freecad_library/standards/<family>.py``. Review
+the diff — the body should make sense as a parametric implementation
+of the standard.
+
+### Step 3 — Write the per-module test
+
+``tests/test_<family>.py`` loads the manifest, discovers fixtures via
+``discover_fixtures`` (from ``fcstd2b123d.family_extract``), and
+parametrises over them. The validation harness in ``tests/_validation.py``
+accepts a class — call it as the ``parametric_fn`` argument.
+
+See ``tests/test_en_10058.py`` for the template.
+
+### Step 4 — Per-module docs
+
+``docs/standards/<family>/README.md`` (rationale, params, worked
+example) and ``DIMENSIONS.md`` (the full dimension table).
+
+### Step 5 — SHIP
+
+A complete PR includes:
+- ``families/<family>.yaml`` (the manifest)
+- ``src/bd_freecad_library/standards/<family>.py`` (generated)
+- ``tests/test_<family>.py``
+- ``docs/standards/<family>/{README,DIMENSIONS}.md``
+- Pure-Python tests pass without FreeCAD
+- Fixture-validation tests pass with ``FCSTD2B123D_FREECAD_PYTHON`` set
+- Regeneration is idempotent (``./tools/regenerate.sh`` doesn't
+  produce new diffs)
+
+## What's in here historically
+
+Before #8, modules were hand-written; ``tests/test_<family>.py``
+imported a separate ``<family>_manifest.py`` Python file with a
+``FIXTURES = [(name, params), ...]`` list. The hand-written era is
+documented in the git history. New families should use the
+manifest-driven workflow above.
+
+The 5-step bootstrap workflow that ``en_10058_manifest.py`` was part
+of is now obsolete. The bd_warehouse pre-check below is the only
+piece of that bootstrap workflow that still applies.
 
 ## Step 0 — CHECK bd_warehouse first (required gate)
 

@@ -1,0 +1,53 @@
+# EN 10058 hot-rolled flat steel bars.
+#
+# A rectangular cross-section of (width × thickness) extruded along the
+# bar's longitudinal axis. The simplest structural steel profile —
+# common in fabricated welded structures, machine bases, fixturing.
+#
+# This manifest will be consumed by ``fcstd2b123d-family`` (Phase 3)
+# to generate a single parametric ``EN10058FlatBar(BasePartObject)``
+# class.
+
+family: en_10058_flat_bar
+class_name: EN10058FlatBar
+
+standard:
+  ref: EN 10058:2018
+  title: Hot rolled flat steel bars for general purposes
+  url: https://www.en-standard.eu/csn-en-10058-hot-rolled-flat-steel-bars-for-general-purposes-dimensions-and-tolerances-on-shape-and-dimensions/
+
+# The 22 EN 10058 fixtures in the fcstd2b123d corpus all match this glob.
+fixture_glob: "**/Flat_Bar_*_EN10058_S235JR.FCStd"
+
+# Two integer dimensions in the filename: <width>x<thickness>. The
+# trailing underscore-delimited parts are the standard + material
+# grade, common to all fixtures.
+filename_pattern: "Flat_Bar_(?P<width>\\d+)x(?P<thickness>\\d+)_EN10058_S235JR"
+
+parameters:
+  - name: width
+    source: filename
+    type: float
+    units: mm
+    doc: "Larger cross-section dimension."
+  - name: thickness
+    source: filename
+    type: float
+    units: mm
+    doc: "Smaller cross-section dimension."
+  - name: length
+    source: extrude_amount
+    type: float
+    units: mm
+    default: 50
+    doc: |
+      Bar length along its longitudinal axis. EN 10058 doesn't fix this
+      — it's a continuous parameter. The FreeCAD library models every
+      variant at 50 mm.
+
+docstring: |
+  EN 10058 hot-rolled flat steel bar — rectangular cross-section
+  (width × thickness) extruded along the bar's longitudinal axis.
+
+  See ``docs/standards/en_10058/`` in ``bd-freecad-library`` for the
+  dimension table and rationale.
