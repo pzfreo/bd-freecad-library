@@ -6,6 +6,45 @@ so every family ends up with the same shape: a parametric function (or
 class — see issue #1), a regression manifest pinned to FreeCAD source
 fixtures, and a per-module README.
 
+## Step 0 — CHECK bd_warehouse first (required gate)
+
+**Before doing anything else, check that the family isn't already in
+[`bd_warehouse`](https://github.com/gumyr/bd_warehouse).** This
+project's scope is *category 2a* per the
+[strategy doc](https://github.com/pzfreo/fcstd2b123d/blob/main/docs/strategy/derivative-libraries.md):
+parts that bd_warehouse *could* cover but doesn't yet. Anything
+bd_warehouse already implements is out of scope.
+
+Quick reference of what bd_warehouse covers (from
+`bd_warehouse/fastener.py`, `bearing.py`, `flange.py`, `thread.py`,
+`pipe.py`, `gear.py`, `sprocket.py`, `open_builds.py`):
+
+- **Fasteners (all)**: socket head cap screws (ISO 4762), button head,
+  cheese head, countersunk, hex head, pan head, set screws, etc.
+- **Nuts (all)**: hex, square, flange, cap (domed), heat-set, etc.
+- **Washers (all)**: plain (ISO 7089/7091/7093/7094), chamfered,
+  cheese head, internal tooth lock, etc.
+- **Bearings**: deep groove ball, angular contact, cylindrical roller,
+  tapered roller, etc.
+- **Flanges**: blind, lapped, slip-on, socket weld, weld neck.
+- **Threads**: metric, BSP, NPT.
+- **Gears, sprockets, pipe fittings, open-builds extrusions, lead
+  screws.**
+
+Verification:
+
+```bash
+grep -in "<family-keyword>\|<standard-number>" \
+    $(python -c "import bd_warehouse, pathlib; print(pathlib.Path(bd_warehouse.__file__).parent)")/*.py
+```
+
+If a match comes back, the family is **out of scope** — stop. The
+right path is contributing to bd_warehouse upstream, not duplicating
+here.
+
+If the search comes back empty, the family is in scope (a 2a
+candidate). Proceed to step 1.
+
 ## The five steps
 
 ### 1. SELECT — pick fixtures from the FreeCAD library
@@ -15,7 +54,8 @@ corpus that match the family. The corpus has ~3,194 files; the bulk
 are organised under `tests/fixtures/sample_2026/`, `sample_813/`,
 and `tier3_corpus*/`.
 
-Inclusion check for the family:
+Inclusion check for the family (in addition to the step 0 bd_warehouse
+gate):
 
 - Internationally standardised (ISO / DIN / ANSI / EN spec exists)
 - Dimensionally parametric (a small dimension table covers the family)
@@ -23,6 +63,12 @@ Inclusion check for the family:
   parametrising rather than one-off curating)
 - All variants translate cleanly through `fcstd2b123d` today (none
   excluded in its corpus's `EXCLUDED_FROM_TEST`)
+- **Fixtures model a complete part** — not just one feature in a
+  multi-object document. The harness validates `result =`, so the
+  fixture's `result` must be the complete part of interest. Multi-
+  object Part-workbench fixtures (`Part::Revolution` + body-less
+  `Part::Pocket` with no explicit boolean) don't qualify — they're
+  visual props, not solid models.
 
 If any of these fails, the part is **not** a candidate for
 `standards/` — it belongs under `curated/` (if it's good CAD) or
