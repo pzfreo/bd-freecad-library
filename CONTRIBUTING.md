@@ -3,8 +3,16 @@
 This library follows a repeatable five-step process for each new
 standardised parts family or curated design. The workflow is designed
 so every family ends up with the same shape: a parametric function (or
-class — see issue #1), a regression manifest pinned to FreeCAD source
-fixtures, and a per-module README.
+class), a regression manifest pinned to FreeCAD source fixtures, and a
+per-module README.
+
+> **Note on the workflow's lifespan**: this 5-step hand-written process
+> is the **v0.x bootstrap**. The steady-state architecture is in
+> [`fcstd2b123d/docs/design/family-extraction.md`](https://github.com/pzfreo/fcd2b123d/blob/main/docs/design/family-extraction.md)
+> — manifests, not hand-written Python, and class-based output
+> generated deterministically by the translator. Once Phase 4 of that
+> design lands, this CONTRIBUTING doc gets a substantial rewrite. The
+> bd_warehouse pre-check (Step 0 below) remains regardless.
 
 ## Step 0 — CHECK bd_warehouse first (required gate)
 
