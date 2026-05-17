@@ -10,8 +10,13 @@ that work into a reusable Python package.
 
 ## Status: v0.0 — bootstrap
 
-Currently scaffolded with ISO 4762 (socket head cap screws) as the first
-family. Many more to come. Expect API churn in v0.x.
+Currently scaffolded with ISO 7093 (plain washers, large series) as
+the first family. Validation harness in place; ISO 4762 (socket head
+cap screws) is the planned second family once a `fcstd2b123d`
+translator gap is closed (see issues).
+
+See `CONTRIBUTING.md` for the five-step process used to add each
+family.
 
 ## What's in here
 
@@ -29,23 +34,32 @@ pip install bd-freecad-library
 ## Example
 
 ```python
-from bd_freecad_library.standards.iso4762 import iso4762_cap_screw
+from bd_freecad_library.standards.iso7093 import iso7093_plain_washer
 
-# An M5×20 socket head cap screw
-screw = iso4762_cap_screw(thread="M5", length=20)
-print(screw.volume)
+# An M5 plain washer (large series)
+washer = iso7093_plain_washer(thread="M5")
+print(washer.volume)
 ```
 
-## Threading note (v0.1 / v0.2 split)
+## Validation
 
-v0.1 modelling: threaded shafts are **smooth cylinders** of the thread's
-nominal diameter — geometrically correct except for the thread profile
-itself. This matches `bd_warehouse`'s approach and is sufficient for
-most assembly modelling.
+Every parts family is regression-tested against the corresponding
+fixtures in the [`fcstd2b123d`](https://github.com/pzfreo/fcstd2b123d)
+corpus. The harness in `tests/_validation.py` translates each
+fixture, exec's the build123d emit, and compares geometry
+(bbox-extents + optional volume) against the parametric function.
 
-v0.2 will add real helix-threaded variants once
-[`fcstd2b123d#33`](https://github.com/pzfreo/fcstd2b123d/issues/33)
-(Part::Helix translation) is closed. Tracked as a separate issue here.
+Run the validation locally:
+
+```bash
+export FCSTD2B123D_REPO=$(realpath ../fcd2b123d)
+export FCSTD2B123D_FREECAD_PYTHON=$(realpath $FCSTD2B123D_REPO/.conda/envs/freecad/bin/python)
+export FCSTD2B123D_FREECAD_PYTHONPATH=$(realpath $FCSTD2B123D_REPO/.conda/envs/freecad/lib)
+pip install -e .[dev]
+pytest
+```
+
+Tests skip cleanly when `FCSTD2B123D_FREECAD_PYTHON` is unset.
 
 ## Provenance and licensing
 
