@@ -60,7 +60,7 @@ v0.2 will add real helix-threaded variants once
 [`bd_warehouse`](https://github.com/gumyr/bd_warehouse) is the canonical
 build123d ecosystem library. It covers ~48% of the FreeCAD Parts Library
 already (fasteners, bearings, chains). This project fills the gap:
-parametric standards `bd_warehouse` *should* cover but doesn't yet (EN
+parametric standards `bd_warehouse` *could* cover but doesn't yet (EN
 profiles, tab washers, etc.), and curated individual designs that aren't
 parametric families.
 
