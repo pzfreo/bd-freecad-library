@@ -19,6 +19,9 @@ Current families:
 
 - **EN 10058 hot-rolled flat steel bars** (structural steel; not in
   `bd_warehouse`)
+- **DIN 1025-2 HE-B wide-flange I-beams** (structural steel I-shape
+  sections; uses the manifest `dimensions_table` to look up b/tw/tf/r
+  by h-designation)
 
 ## What's in here
 

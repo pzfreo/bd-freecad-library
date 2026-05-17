@@ -1,0 +1,95 @@
+# DIN 1025-2 HE-B (broad-flange beam) profiles.
+#
+# I-shaped structural steel section. Each size is specified by a
+# single designation (e.g. "HE-B 280" → h=280 mm) but five geometric
+# dimensions vary per size: total height, flange width, web thickness,
+# flange thickness, and root radius. The dimension table is part of
+# the DIN 1025-2 standard.
+#
+# Three fixtures are in the fcstd2b123d corpus (HE-B 280, 320, 900).
+# The dimensions_table below covers those sizes plus a few of the
+# common ones not yet in the corpus, so the generated class can be
+# instantiated for any of them.
+
+family: din_1025_2_he_b
+class_name: DIN1025HEBProfile
+
+standard:
+  ref: "DIN 1025-2:1995"
+  title: "Hot rolled I and H sections — Part 2: Wide flange I sections, HE series"
+  url: https://www.beuth.de/en/standard/din-1025-2/13243321
+
+fixture_glob: "**/HE-B-Profile_*_DIN1025-2_S235JR.FCStd"
+
+# The size designation (e.g. 280) appears in the filename. All other
+# dimensions are looked up in the table below.
+filename_pattern: "HE-B-Profile_(?P<h>\\d+)_DIN1025-2_S235JR"
+
+parameters:
+  - name: h
+    source: filename
+    type: float
+    units: mm
+    doc: "Total section height (and the size designation)."
+  - name: b
+    source: lookup
+    type: float
+    units: mm
+    doc: "Flange width."
+  - name: tw
+    source: lookup
+    type: float
+    units: mm
+    doc: "Web thickness."
+  - name: tf
+    source: lookup
+    type: float
+    units: mm
+    doc: "Flange thickness."
+  - name: r
+    source: lookup
+    type: float
+    units: mm
+    doc: "Web/flange root radius."
+  - name: length
+    source: extrude_amount
+    type: float
+    units: mm
+    default: 50
+    doc: |
+      Beam length along the longitudinal axis. DIN 1025-2 doesn't
+      fix this — it's a continuous parameter. The FreeCAD library
+      models every variant at 50 mm.
+
+# Dimensions per HE-B size from DIN 1025-2. Keys are h (total height).
+dimensions_table:
+  "100": {b: 100, tw: 6.0,  tf: 10.0, r: 12}
+  "120": {b: 120, tw: 6.5,  tf: 11.0, r: 12}
+  "140": {b: 140, tw: 7.0,  tf: 12.0, r: 12}
+  "160": {b: 160, tw: 8.0,  tf: 13.0, r: 15}
+  "180": {b: 180, tw: 8.5,  tf: 14.0, r: 15}
+  "200": {b: 200, tw: 9.0,  tf: 15.0, r: 18}
+  "220": {b: 220, tw: 9.5,  tf: 16.0, r: 18}
+  "240": {b: 240, tw: 10.0, tf: 17.0, r: 21}
+  "260": {b: 260, tw: 10.0, tf: 17.5, r: 24}
+  "280": {b: 280, tw: 10.5, tf: 18.0, r: 24}
+  "300": {b: 300, tw: 11.0, tf: 19.0, r: 27}
+  "320": {b: 300, tw: 11.5, tf: 20.5, r: 27}
+  "340": {b: 300, tw: 12.0, tf: 21.5, r: 27}
+  "360": {b: 300, tw: 12.5, tf: 22.5, r: 27}
+  "400": {b: 300, tw: 13.5, tf: 24.0, r: 27}
+  "450": {b: 300, tw: 14.0, tf: 26.0, r: 27}
+  "500": {b: 300, tw: 14.5, tf: 28.0, r: 27}
+  "550": {b: 300, tw: 15.0, tf: 29.0, r: 27}
+  "600": {b: 300, tw: 15.5, tf: 30.0, r: 27}
+  "650": {b: 300, tw: 16.0, tf: 31.0, r: 27}
+  "700": {b: 300, tw: 17.0, tf: 32.0, r: 27}
+  "800": {b: 300, tw: 17.5, tf: 33.0, r: 30}
+  "900": {b: 300, tw: 18.5, tf: 35.0, r: 30}
+  "1000": {b: 300, tw: 19.0, tf: 36.0, r: 30}
+
+docstring: |
+  DIN 1025-2 HE-B (wide-flange) structural steel beam. An I-shape
+  section parametric over its size designation (the height h) — the
+  flange width, web thickness, flange thickness and root radius are
+  resolved from the standard's dimension table.
